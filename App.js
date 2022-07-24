@@ -1,37 +1,66 @@
-import React,{Component} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import HomeScreen from './screens/HomeScreen';
-import ISSLocation from './screens/ISSLocation';
-import {StatusBar} from  'expo-status-bar';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import MeteorsLocation from './screens/MeteorsLocation';
+import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { createAppContainer ,createSwitchNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 
-const Stack =  createStackNavigator()
+import BookTransaction from './screens/BookTransaction';
+import SearchScreen from './screens/SearchScreen';
+import LoginScreen from './screens/LoginScreen'
 
- function App () {
-  return(
-    
-    <NavigationContainer>
+export default class App extends React.Component {
+  render(){
+    return (
 
-      <Stack.Navigator intialrouteName = "ISS">
-      <Stack.Screen name = "ISS" component = {ISSLocation} />
-        <Stack.Screen name = "Home" component = {HomeScreen} />
-        
-        <Stack.Screen name = "Meteors" component = {MeteorsLocation} />
-      </Stack.Navigator>
+        <AppContainer/>
 
-
-    </NavigationContainer>
-  );
+    );
+  }
 }
 
-export default App ;
+
+
+const TabNavigator = createBottomTabNavigator({
+  Transaction: {screen: BookTransaction},
+  Search: {screen: SearchScreen},
+},
+{
+  defaultNavigationOptions: ({navigation})=>({
+    tabBarIcon: ()=>{
+      const routeName = navigation.state.routeName;
+      console.log(routeName)
+      if(routeName === "Transaction"){
+        return(
+          <Image
+          source={require("./assets/book.png")}
+          style={{width:40, height:40}}
+        />
+        )
+
+      }
+      else if(routeName === "Search"){
+        return(
+          <Image
+          source={require("./assets/searchingbook.png")}
+          style={{width:40, height:40}}
+        />)
+
+      }
+    }
+  })
+}
+);
+
+const switchNavigator = createSwitchNavigator({
+LoginScreen:{screen: LoginScreen},
+TabNavigator:{screen: TabNavigator}
+})
+
+const AppContainer =  createAppContainer(switchNavigator);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
